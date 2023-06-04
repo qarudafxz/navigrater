@@ -70,10 +70,7 @@ function Login() {
 				height={10}
 				onLoaderFinished={() => setProgress(0)}
 			/>
-			<img
-				src={Bg}
-				className='object-cover	h-screen w-7/12'
-			/>
+
 			<div className='w-6/12 flex flex-col gap-4 py-10 px-24 bg-[#f5f4f7]'>
 				<div className='bg-white p-10 rounded-lg m-auto shadow-2xl'>
 					<div className='mt-4'>
@@ -134,6 +131,10 @@ function Login() {
 					</p>
 				</div>
 			</div>
+			<img
+				src={Bg}
+				className='object-cover	h-screen w-7/12'
+			/>
 		</div>
 	);
 }
