@@ -48,7 +48,7 @@ function Navbar({ name, handlePinModeToggle, pinMode }) {
 					<p className='duration-150 text-white'>Click anywhere on the map</p>
 				) : (
 					<p className='duration-150 text-white'>
-						Click button Press E to Enter Pin Mode
+						Click button or Press E to Enter Pin Mode
 					</p>
 				)}
 			</div>

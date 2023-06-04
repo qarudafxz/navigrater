@@ -17,6 +17,8 @@ import {
 	useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 import Navbar from "../../components/Navbar.jsx";
 import Ratings from "../../components/Ratings.jsx";
@@ -157,6 +159,17 @@ function Map() {
 						comment,
 					},
 				]);
+				toast("Rate added!", {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: false,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+					type: "success",
+				});
 			});
 	};
 
@@ -198,6 +211,18 @@ function Map() {
 
 	return (
 		<div className='flex flex-col overflow-hidden'>
+			<ToastContainer
+				position='top-right'
+				autoClose={5000}
+				hideProgressBar={false}
+				newestOnTop={false}
+				closeOnClick
+				rtl={false}
+				pauseOnFocusLoss
+				draggable
+				pauseOnHover
+				theme='light'
+			/>
 			<Navbar
 				name={name}
 				handlePinModeToggle={handlePinModeToggle}
