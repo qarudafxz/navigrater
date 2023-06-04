@@ -46,7 +46,11 @@ function Navbar({ name, handlePinModeToggle, pinMode }) {
 				</button>
 				{pinMode ? (
 					<p className='duration-150 text-white'>Click anywhere on the map</p>
-				) : null}
+				) : (
+					<p className='duration-150 text-white'>
+						Click button Press E to Enter Pin Mode
+					</p>
+				)}
 			</div>
 			<div className='flex flex-row'>
 				<button

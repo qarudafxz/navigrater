@@ -182,6 +182,20 @@ function Map() {
 		fetchMyRatings();
 	}, []);
 
+	useEffect(() => {
+		const triggerPinMode = (e) => {
+			if (e.key === "e") {
+				setPinMode(!pinMode);
+			}
+		};
+
+		window.addEventListener("keydown", triggerPinMode);
+
+		return () => {
+			window.removeEventListener("keydown", triggerPinMode);
+		};
+	});
+
 	return (
 		<div className='flex flex-col overflow-hidden'>
 			<Navbar
