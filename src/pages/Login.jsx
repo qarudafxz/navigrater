@@ -84,7 +84,7 @@ function Login() {
 					<div className='mt-4'>
 						<h1 className='font-extrabold text-6xl flex items-center gap-8'>
 							<GrMapLocation />
-							Navigrater
+							NavigRater
 						</h1>
 						<p className='w-11/12 mt-2'>
 							Pin your favorite location and provide a rating with a little comment

@@ -58,7 +58,7 @@ function Register() {
 			/>
 			<div className='mt-40 m-auto w-4/12 shadow-2xl py-10 px-14'>
 				<h1 className='flex flex-row gap-4 items-center text-xl'>
-					<GrMapLocation /> Navigrater
+					<GrMapLocation /> NavigRater
 				</h1>
 				<h1 className='text-3xl font-bold'>Register</h1>
 				{error && <p className='text-red-500 mt-4'>{error}</p>}

@@ -32,7 +32,7 @@ function Navbar({ name, handlePinModeToggle, pinMode }) {
 			/>
 			<div className='flex flex-row gap-8 items-center'>
 				<h1 className='font-extrabold text-4xl flex items-center gap-4 text-white'>
-					Navigrater
+					NavigRater
 				</h1>
 				<h1 className='text-white text-xl'>
 					Welcome back <span className='font-bold'>{name}</span>
