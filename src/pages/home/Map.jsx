@@ -197,7 +197,7 @@ function Map() {
 
 	useEffect(() => {
 		const triggerPinMode = (e) => {
-			if (e.key === "e") {
+			if (e.key === "1") {
 				setPinMode(!pinMode);
 			}
 		};
