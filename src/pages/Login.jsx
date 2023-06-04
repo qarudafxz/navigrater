@@ -6,12 +6,14 @@ import { buildUrl } from "../utils/buildUrl.js";
 import TopLoadingBar from "react-top-loading-bar";
 
 import { GrMapLocation } from "react-icons/gr";
+import { getToken } from "../helpers/getToken.js";
 function Login() {
 	const navigate = useNavigate();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [progress, setProgress] = useState(0);
 	const [error, setError] = useState("");
+	const token = getToken();
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
@@ -61,6 +63,12 @@ function Login() {
 			}, 3000);
 		}
 	}, [error]);
+
+	useEffect(() => {
+		if (token) {
+			navigate("/map");
+		}
+	}, [token]);
 
 	return (
 		<div className='font-main flex flex-row'>
