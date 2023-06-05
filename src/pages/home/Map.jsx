@@ -31,6 +31,14 @@ function Map() {
 		iconAnchor: null,
 		iconSize: new L.Point(40, 60),
 	});
+
+	const rateIcon = new L.Icon({
+		iconUrl:
+			"https://images.vexels.com/media/users/3/141915/isolated/preview/fa18fbc911311b5371870c880fa5f75a-location-pin.png",
+		iconAnchor: null,
+		iconSize: new L.Point(60, 60),
+	});
+
 	const userID = getUserID();
 	const [rating, setRating] = useState(0);
 	const [comment, setComment] = useState("");
@@ -251,7 +259,8 @@ function Map() {
 				{locationInfo?.map((location, index) => (
 					<Marker
 						key={index}
-						position={[location.lat, location.lng]}>
+						position={[location.lat, location.lng]}
+						icon={rateIcon}>
 						<Popup>
 							<div>
 								<h1 className='text-lg font-bold'>{location.name}</h1>
