@@ -17,6 +17,7 @@ import {
 	useMapEvents,
 } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -24,6 +25,12 @@ import Navbar from "../../components/Navbar.jsx";
 import Ratings from "../../components/Ratings.jsx";
 
 function Map() {
+	const icon = new L.Icon({
+		iconUrl:
+			"https://static.vecteezy.com/system/resources/previews/022/102/114/original/red-pin-map-location-heart-png.png",
+		iconAnchor: null,
+		iconSize: new L.Point(40, 60),
+	});
 	const userID = getUserID();
 	const [rating, setRating] = useState(0);
 	const [comment, setComment] = useState("");
@@ -233,6 +240,8 @@ function Map() {
 			<MapContainer
 				center={center}
 				zoom={11}
+				setMinZoom={11}
+				setMaxZoom={18}
 				style={{ width: "100vw", height: "100vh" }}
 				className='absolute -z-10'
 				scrollWheelZoom={true}>
@@ -278,6 +287,7 @@ function Map() {
 				{ratings?.map((location, index) => (
 					<Marker
 						key={index}
+						icon={icon}
 						position={[location.lat, location.lng]}>
 						<Popup>
 							<div>
