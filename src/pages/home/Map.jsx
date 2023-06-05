@@ -39,6 +39,13 @@ function Map() {
 		iconSize: new L.Point(60, 60),
 	});
 
+	const myRateIcon = new L.Icon({
+		iconUrl:
+			"https://static.vecteezy.com/system/resources/previews/009/385/892/original/pin-location-icon-sign-free-png.png",
+		iconAnchor: null,
+		iconSize: new L.Point(40, 50),
+	});
+
 	const userID = getUserID();
 	const [rating, setRating] = useState(0);
 	const [comment, setComment] = useState("");
@@ -72,6 +79,7 @@ function Map() {
 						getRatings((prevRatings) => [
 							...prevRatings,
 							{
+								owner: dat.owner,
 								raterName: loc.raterName,
 								name: loc.name,
 								lat: loc.lat,
@@ -260,7 +268,7 @@ function Map() {
 					<Marker
 						key={index}
 						position={[location.lat, location.lng]}
-						icon={rateIcon}>
+						icon={icon}>
 						<Popup>
 							<div>
 								<h1 className='text-lg font-bold'>{location.name}</h1>
@@ -296,7 +304,7 @@ function Map() {
 				{ratings?.map((location, index) => (
 					<Marker
 						key={index}
-						icon={icon}
+						icon={location.owner === userID ? myRateIcon : rateIcon}
 						position={[location.lat, location.lng]}>
 						<Popup>
 							<div>
@@ -312,6 +320,11 @@ function Map() {
 								<h1 className='text-sm font-thin border border-black py-2 pl-2 rounded-md'>
 									{location.comment}
 								</h1>
+								{location.owner === userID && (
+									<button className='bg-black rounded-md text-white font-bold w-full py-2 mt-4'>
+										Delete my rate
+									</button>
+								)}
 							</div>
 						</Popup>
 					</Marker>
