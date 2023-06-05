@@ -264,6 +264,7 @@ function Map() {
 					height: "100vh",
 					cursor: pinMode ? "pointer" : "default !important",
 				}}
+				className='absolute -z-10'
 				scrollWheelZoom={true}>
 				<TileLayer
 					url='https://api.maptiler.com/maps/hybrid/256/{z}/{x}/{y}.jpg?key=8QSiXxwJjBuySKIAaifQ'
@@ -345,7 +346,6 @@ function Map() {
 										})()}
 									</div>
 								</div>
-
 								<p className='font-semibold'>Comment</p>
 								<h1 className='text-sm font-thin border border-black py-2 pl-2 rounded-md'>
 									{location.comment}
