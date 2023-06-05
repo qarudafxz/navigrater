@@ -9,6 +9,7 @@ import { buildUrl } from "../../utils/buildUrl.js";
 import Instructions from "../../components/Instructions.jsx";
 import Star from "../../components/Star.jsx";
 import { FaStar } from "react-icons/fa";
+import { AiOutlineStar } from "react-icons/ai";
 import {
 	MapContainer,
 	TileLayer,
@@ -258,8 +259,11 @@ function Map() {
 				zoom={11}
 				setMinZoom={11}
 				setMaxZoom={18}
-				style={{ width: "100vw", height: "100vh" }}
-				className='absolute -z-10'
+				style={{
+					width: "100vw",
+					height: "100vh",
+					cursor: pinMode ? "pointer" : "default !important",
+				}}
 				scrollWheelZoom={true}>
 				<TileLayer
 					url='https://api.maptiler.com/maps/hybrid/256/{z}/{x}/{y}.jpg?key=8QSiXxwJjBuySKIAaifQ'
@@ -312,10 +316,36 @@ function Map() {
 								<h1 className='font-semibold my-2 bg-black text-white text-center py-2 rounded-md'>
 									Rated By: {location?.raterName}
 								</h1>
-								<h1 className='text-lg font-bold flex items-center gap-4'>
-									<FaStar />
-									{location.rating}
-								</h1>
+								<div className='flex flex-row gap-4'>
+									<h1 className='font-extrabold'>{location.rating}</h1>
+									<div>
+										{(() => {
+											const stars = [];
+											const rating = Math.floor(location.rating);
+
+											for (let i = 0; i < rating; i++) {
+												stars.push(<FaStar key={i} />);
+											}
+
+											for (let i = rating; i < 5; i++) {
+												stars.push(<AiOutlineStar key={i} />);
+											}
+
+											return (
+												<div className='flex'>
+													{stars.map((star, index) => (
+														<span
+															className='text-sm'
+															key={index}>
+															{star}
+														</span>
+													))}
+												</div>
+											);
+										})()}
+									</div>
+								</div>
+
 								<p className='font-semibold'>Comment</p>
 								<h1 className='text-sm font-thin border border-black py-2 pl-2 rounded-md'>
 									{location.comment}
@@ -329,6 +359,7 @@ function Map() {
 						</Popup>
 					</Marker>
 				))}
+
 				<MapClickHandler />
 			</MapContainer>
 		</div>
