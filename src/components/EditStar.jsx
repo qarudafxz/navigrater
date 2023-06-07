@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { FaStar } from "react-icons/fa";
 
-const Star = ({ rating, setRating, disabled = false }) => {
+const Star = ({ editRate, setEditRate, disabled = false }) => {
 	const [hover, setHover] = useState(null);
 
 	return (
@@ -11,10 +11,11 @@ const Star = ({ rating, setRating, disabled = false }) => {
 				let color;
 				if (!disabled) {
 					if (hover) {
-						color = ratingValue <= (hover || rating) ? "text-brown" : "text-gray-200";
+						color =
+							ratingValue <= (hover || editRate) ? "text-brown" : "text-gray-200";
 					} else {
 						color =
-							ratingValue <= (hover || rating) ? "text-primary" : "text-gray-200";
+							ratingValue <= (hover || editRate) ? "text-primary" : "text-gray-200";
 					}
 				} else {
 					color = "text-gray-200 opacity-40";
@@ -31,7 +32,7 @@ const Star = ({ rating, setRating, disabled = false }) => {
 							value={ratingValue}
 							disabled={disabled}
 							onClick={() => {
-								setRating(ratingValue);
+								setEditRate(ratingValue);
 							}}
 						/>
 						<FaStar

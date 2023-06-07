@@ -8,6 +8,7 @@ import { buildUrl } from "../../utils/buildUrl.js";
 
 import Instructions from "../../components/Instructions.jsx";
 import Star from "../../components/Star.jsx";
+import EditStar from "../../components/EditStar.jsx";
 import { FaStar } from "react-icons/fa";
 import { AiOutlineStar } from "react-icons/ai";
 import {
@@ -61,6 +62,9 @@ function Map() {
 
 	const [ratings, getRatings] = useState([]);
 	const [myRatings, getMyRatings] = useState([]);
+	const [isEdit, setIsEdit] = useState(false);
+	const [editComment, setEditComment] = useState("");
+	const [editRate, setEditRate] = useState(0);
 
 	const handlePinModeToggle = () => {
 		setPinMode(!pinMode);
@@ -233,6 +237,49 @@ function Map() {
 		}
 	};
 
+	const editMyRate = async (e, id) => {
+		e.preventDefault();
+		try {
+			await fetch(buildUrl(`rate/edit/${id}`), {
+				method: "PUT",
+				headers: {},
+				body: JSON.stringify({
+					owner: userID,
+					location: {
+						rating: editRate,
+						comment: editComment,
+					},
+				}),
+			}).then((res) => {
+				if (res.ok || res.status === 200) {
+					getMyRatings((prevRatings) => [
+						...prevRatings,
+						{
+							name: locationInfo[locationInfo.length - 1].name,
+							lat: locationInfo[locationInfo.length - 1].lat,
+							lng: locationInfo[locationInfo.length - 1].lng,
+							rating: editRate,
+							comment: editComment,
+						},
+					]);
+					toast("Rate edited!", {
+						position: "top-right",
+						autoClose: 5000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: false,
+						draggable: true,
+						progress: undefined,
+						theme: "light",
+						type: "success",
+					});
+				}
+			});
+		} catch (err) {
+			console.error(err);
+		}
+	};
+
 	const removePin = (e, index) => {
 		e.preventDefault;
 		const newLocationInfo = [...locationInfo];
@@ -342,64 +389,112 @@ function Map() {
 						</Popup>
 					</Marker>
 				))}
-				{ratings?.map((location, index) => (
-					<Marker
-						key={index}
-						icon={location.owner === userID ? myRateIcon : rateIcon}
-						position={[location.lat, location.lng]}>
-						<Popup>
-							<div>
-								<h1 className='text-lg font-bold'>{location.name}</h1>
-								<h1 className='font-semibold my-2 bg-black text-white text-center py-2 rounded-md'>
-									Rated By: {location?.raterName}
-								</h1>
-								<div className='flex flex-row gap-4'>
-									<h1 className='font-extrabold'>{location.rating}</h1>
-									<div>
-										{(() => {
-											const stars = [];
-											const rating = Math.floor(location.rating);
-
-											for (let i = 0; i < rating; i++) {
-												stars.push(<FaStar key={i} />);
-											}
-
-											for (let i = rating; i < 5; i++) {
-												stars.push(<AiOutlineStar key={i} />);
-											}
-
-											return (
-												<div className='flex'>
-													{stars.map((star, index) => (
-														<span
-															className='text-sm'
-															key={index}>
-															{star}
-														</span>
-													))}
-												</div>
-											);
-										})()}
-									</div>
-								</div>
-								<p className='font-semibold'>Comment</p>
-								<h1 className='text-sm font-thin border border-black py-2 pl-2 rounded-md'>
-									{location.comment}
-								</h1>
-								{location.owner === userID && (
+				{ratings?.map((location, index) =>
+					isEdit ? (
+						<Marker
+							key={index}
+							position={[location.lat, location.lng]}
+							icon={icon}>
+							<Popup>
+								<div>
+									<h1 className='text-lg font-bold'>{location.name}</h1>
+									<form
+										onSubmit={(e) => {
+											editMyRate(e, location.id);
+										}}>
+										<div className='flex justify-between'>
+											<p className='font-bold'>Rating: </p>
+											<EditStar
+												editRate={editRate}
+												setEditRate={setEditRate}
+											/>
+										</div>
+										<textarea
+											placeholder='Edit Comment'
+											onChange={(e) => setEditComment(e.target.value)}
+											className='border-2 border-black rounded-md p-2 my-2 w-full'
+										/>
+										<button
+											type='submit'
+											className='bg-black text-white rounded-md p-2 my-2 w-full'>
+											Submit
+										</button>
+									</form>
 									<button
 										onClick={() => {
 											deleteRate(location.id);
 										}}
-										className='bg-black rounded-md text-white font-bold w-full py-2 mt-4'>
+										className='bg-black rounded-md text-white font-bold w-full py-2'>
 										Delete my rate
 									</button>
-								)}
-							</div>
-						</Popup>
-					</Marker>
-				))}
+								</div>
+							</Popup>
+						</Marker>
+					) : (
+						<Marker
+							key={index}
+							icon={location.owner === userID ? myRateIcon : rateIcon}
+							position={[location.lat, location.lng]}>
+							<Popup>
+								<div>
+									<h1 className='text-lg font-bold'>{location.name}</h1>
+									<h1 className='font-semibold my-2 bg-black text-white text-center py-2 rounded-md'>
+										Rated By: {location?.raterName}
+									</h1>
+									<div className='flex flex-row gap-4'>
+										<h1 className='font-extrabold'>{location.rating}</h1>
+										<div>
+											{(() => {
+												const stars = [];
+												const rating = Math.floor(location.rating);
 
+												for (let i = 0; i < rating; i++) {
+													stars.push(<FaStar key={i} />);
+												}
+
+												for (let i = rating; i < 5; i++) {
+													stars.push(<AiOutlineStar key={i} />);
+												}
+
+												return (
+													<div className='flex'>
+														{stars.map((star, index) => (
+															<span
+																className='text-sm'
+																key={index}>
+																{star}
+															</span>
+														))}
+													</div>
+												);
+											})()}
+										</div>
+									</div>
+									<p className='font-semibold'>Comment</p>
+									<h1 className='text-sm font-thin border border-black py-2 pl-2 rounded-md'>
+										{location.comment}
+									</h1>
+									{location.owner === userID && (
+										<div className='flex flex-row gap-4 w-full'>
+											<button
+												onClick={() => {
+													deleteRate(location.id);
+												}}
+												className='bg-black rounded-md text-white font-bold w-full py-2 mt-4'>
+												Delete my rate
+											</button>
+											<button
+												onClick={() => setIsEdit(!isEdit)}
+												className='bg-black rounded-md text-white font-bold w-full py-2 mt-4'>
+												Edit Rating
+											</button>
+										</div>
+									)}
+								</div>
+							</Popup>
+						</Marker>
+					)
+				)}
 				<MapClickHandler />
 			</MapContainer>
 		</div>
