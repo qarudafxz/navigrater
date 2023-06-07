@@ -1,4 +1,5 @@
 import { Rating } from "../models/Rating.js";
+import { User } from "../models/User.js";
 
 export const addRating = async (req, res) => {
 	const { owner, location } = req.body;
@@ -37,5 +38,16 @@ export const getMyRatings = async (req, res) => {
 		res.status(200).json(ratings);
 	} catch (err) {
 		console.log(err);
+	}
+};
+
+export const deleteMyRating = async (req, res) => {
+	try {
+		const rate = await Rating.findOneAndDelete({ _id: req.params.id });
+		if (!rate) return res.status(404).json({ message: "Rating not found" });
+
+		res.status(200).json({ message: "Rating deleted" });
+	} catch (err) {
+		console.error(err);
 	}
 };

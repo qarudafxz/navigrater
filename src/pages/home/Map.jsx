@@ -53,6 +53,7 @@ function Map() {
 	const [locationInfo, setLocationInfo] = useState([]);
 
 	const [pinMode, setPinMode] = useState(false);
+	//butuan
 	const center = [8.947093281680594, 125.5426187733828];
 	const name = getName();
 	const navigate = useNavigate();
@@ -80,6 +81,7 @@ function Map() {
 						getRatings((prevRatings) => [
 							...prevRatings,
 							{
+								id: dat._id,
 								owner: dat.owner,
 								raterName: loc.raterName,
 								name: loc.name,
@@ -109,6 +111,7 @@ function Map() {
 						getMyRatings((prevRatings) => [
 							...prevRatings,
 							{
+								owner: dat.owner,
 								name: loc.name,
 								lat: loc.lat,
 								lng: loc.lng,
@@ -119,6 +122,7 @@ function Map() {
 					});
 				});
 			});
+		console.log(myRatings);
 	};
 
 	const handleMapClick = async (e) => {
@@ -195,6 +199,38 @@ function Map() {
 					type: "success",
 				});
 			});
+	};
+
+	const deleteRate = async (location) => {
+		try {
+			await fetch(buildUrl(`rate/delete/${location}`), {
+				method: "DELETE",
+				headers: {
+					Authentication: `Bearer ${token}`,
+					"Content-Type": "application/json",
+				},
+			}).then((res) => {
+				if (res.ok) {
+					getRatings((prevRatings) =>
+						prevRatings.filter((rating) => rating.id !== location)
+					);
+					toast("Rate deleted!", {
+						position: "top-right",
+						autoClose: 5000,
+						hideProgressBar: false,
+						closeOnClick: true,
+						pauseOnHover: false,
+						draggable: true,
+						progress: undefined,
+						theme: "light",
+						type: "success",
+					});
+				}
+			});
+		} catch (err) {
+			console.error(err);
+			console.log(err);
+		}
 	};
 
 	const removePin = (e, index) => {
@@ -351,7 +387,11 @@ function Map() {
 									{location.comment}
 								</h1>
 								{location.owner === userID && (
-									<button className='bg-black rounded-md text-white font-bold w-full py-2 mt-4'>
+									<button
+										onClick={() => {
+											deleteRate(location.id);
+										}}
+										className='bg-black rounded-md text-white font-bold w-full py-2 mt-4'>
 										Delete my rate
 									</button>
 								)}
