@@ -54,22 +54,22 @@ export const deleteMyRating = async (req, res) => {
 
 export const updateRating = async (req, res) => {
 	const { id } = req.params;
-	const { owner, location } = req.body;
+	const { owner, rating, comment } = req.body;
 
 	try {
-		const updatedRating = await Rating.findOneAndUpdate({ _id: id });
+		const rate = await Rating.findById(id);
 
-		if (!updatedRating)
+		if (!rate) {
 			return res.status(404).json({ message: "Rating not found" });
+		}
 
-		const updateRating = new Rating({
-			owner,
-			location,
-		});
+		const lastLocationIndex = rate.location.length - 1;
+		rate.location[lastLocationIndex].rating = rating;
+		rate.location[lastLocationIndex].comment = comment;
+		rate.owner = owner;
 
-		await updateRating.save();
-
-		res.status(201).json({ updatedRating, message: "Rating updated" });
+		await rate.save();
+		res.status(200).json({ message: "Rating updated" });
 	} catch (err) {
 		console.error(err);
 	}

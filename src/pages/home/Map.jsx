@@ -240,41 +240,42 @@ function Map() {
 	const editMyRate = async (e, id) => {
 		e.preventDefault();
 		try {
-			await fetch(buildUrl(`rate/edit/${id}`), {
+			const response = await fetch(buildUrl(`rate/edit/${id}`), {
 				method: "PUT",
 				headers: {},
 				body: JSON.stringify({
 					owner: userID,
-					location: {
+					rating: editRate,
+					comment: editComment,
+				}),
+			});
+
+			if (response.ok) {
+				getMyRatings((prevRatings) => [
+					...prevRatings,
+					{
+						name: locationInfo[locationInfo.length - 1].name,
+						lat: locationInfo[locationInfo.length - 1].lat,
+						lng: locationInfo[locationInfo.length - 1].lng,
 						rating: editRate,
 						comment: editComment,
 					},
-				}),
-			}).then((res) => {
-				if (res.ok || res.status === 200) {
-					getMyRatings((prevRatings) => [
-						...prevRatings,
-						{
-							name: locationInfo[locationInfo.length - 1].name,
-							lat: locationInfo[locationInfo.length - 1].lat,
-							lng: locationInfo[locationInfo.length - 1].lng,
-							rating: editRate,
-							comment: editComment,
-						},
-					]);
-					toast("Rate edited!", {
-						position: "top-right",
-						autoClose: 5000,
-						hideProgressBar: false,
-						closeOnClick: true,
-						pauseOnHover: false,
-						draggable: true,
-						progress: undefined,
-						theme: "light",
-						type: "success",
-					});
-				}
-			});
+				]);
+
+				toast("Rate edited!", {
+					position: "top-right",
+					autoClose: 5000,
+					hideProgressBar: false,
+					closeOnClick: true,
+					pauseOnHover: false,
+					draggable: true,
+					progress: undefined,
+					theme: "light",
+					type: "success",
+				});
+			} else {
+				throw new Error("Failed to edit rate");
+			}
 		} catch (err) {
 			console.error(err);
 		}
